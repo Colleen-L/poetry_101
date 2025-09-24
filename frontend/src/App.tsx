@@ -17,7 +17,7 @@ function App() {
       const response = await fetch(`http://localhost:8000/search?query=${encodeURIComponent(query)}`);
       const data = await response.json();
 
-      setResults(data.slice(0, 10)); // Get top 10 results
+      setResults(data.slice(0, 10));
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
