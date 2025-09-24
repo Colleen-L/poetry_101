@@ -5,6 +5,8 @@ function App() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
 
   const handleSearch = async () => {
     // obtain search results from backend
@@ -45,11 +47,44 @@ function App() {
         {loading && <p>Loading...</p>}
 
         <ul>
-          {results.map(({ title, author }, idx) => (
-            <li key={idx}>
-              <strong>{title}</strong> {author ? `by ${author}` : ""}
-            </li>
-          ))}
+          {results.map(({ title, author, poem }, idx) => {
+            const isExpanded = expandedIndex === idx;
+
+            return (
+              <li
+                key={idx}
+                onClick={() => setExpandedIndex(isExpanded ? null : idx)}
+                style={{
+                  cursor: "pointer",
+                  marginBottom: '1em',
+                  listStyle: 'none',
+                  padding: '10px',
+                  borderBottom: '1px solid #ddd'
+                }}
+              >
+                <strong>
+                  {isExpanded ? "▼ " : "▶ "}
+                  {title}
+                </strong>
+                {author ? ` by ${author}` : ""}
+                
+                {isExpanded && (
+                  <div
+                    style={{
+                      marginTop: '0.5em',
+                      whiteSpace: 'pre-wrap',
+                      fontStyle: 'italic',
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      padding: '10px',
+                      borderRadius: '5px'
+                    }}
+                  >
+                    {poem}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </>

@@ -71,6 +71,7 @@ def title_and_author():
   #print(len(basic_info), len(cleaned_poems)) # 240 237 -> must normalize
   # populate unknown titles/authors with default descriptors
   normalized_titles = []
+  titles = []
   authors = []
 
   for entry in basic_info:
@@ -96,11 +97,12 @@ def title_and_author():
 
     # appends to lists
     normalized_titles.append(normalize(title))
+    titles.append(title)
     authors.append(author)
 
-  return authors, normalized_titles
+  return authors, normalized_titles, titles
   
-authors, normalized_titles = title_and_author()
+authors, normalized_titles, titles = title_and_author()
 
 # load and preprocess data once on startup
 def load_poems():
@@ -186,7 +188,7 @@ def load_poems():
   # combine normalized titles, author, and poems (as list of words) into pandas data frame
   data = []
 
-  for i, title in enumerate(normalized_titles):
+  for i, title in enumerate(titles):
     author = authors[i]
 
     # grabs index of poem in poems lists corresponding to title
@@ -326,6 +328,7 @@ def search_poems(query: str = Query(..., min_length=1)):
       "id": poem_id,
       "title": df.loc[poem_id, "Title"],
       "author": df.loc[poem_id, "Author"],
+      "poem": df.loc[poem_id, "Original_Poem"],
       "similarity": similarity
     })
 
