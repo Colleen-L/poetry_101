@@ -1,33 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="container">
+        <h1>📜 Poetry 101</h1>
+        <h3>The best tool for teachers and students to read and learn about poetry.</h3>
+        <h3>This tool utilizes the e-book on Project Gutenbery, <i>Poems Teachers Ask For</i>, produced by Charles Aldarondo and the Online Distributed Proofreading Team. </h3>
+        <br></br>
+        <br></br>
+        <input type="search" className="search-bar" placeholder='🔍  What Poem are you looking for? '></input>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
