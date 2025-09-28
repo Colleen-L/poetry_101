@@ -12,6 +12,13 @@ body {
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-content {
   width: 90%;
   max-width: 900px;
   padding: 30px;
@@ -58,4 +65,47 @@ body {
 .search-bar:focus {
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 8px rgba(0, 120, 255, 0.7);
+}
+
+.sidebar-container {
+  display: flex;
+  overflow: hidden;
+}
+
+.sidebar {
+  display: flex;
+  border-radius: 10px;
+  background: rgb(220, 182, 105);
+  color: #000;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.theme-button {
+  display: block;
+  width: 90%;
+  padding: 5px;
+  margin: 10px;
+  border: none;
+  background: rgba(106, 83, 65, 0.3);
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.theme-button:hover,
+.theme-button.active {
+  background: #ceb380;
+}
+
+.clear-button {
+  display: block;
+  width: 90%;
+  padding: 5px;
+  margin: 10px;
+  border: none;
+  background: rgb(223, 107, 71);
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
 }

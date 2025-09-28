@@ -337,3 +337,135 @@ def search_poems(query: str = Query(..., min_length=1)):
   top_results = similarity_scores[:10]
 
   return JSONResponse(content=top_results)
+
+
+# creates a list of all the unique tokens
+all_tokens = list(tfidf_df['token'].unique())
+# assigns an index to each unique token
+token_to_index = {}
+for id, token in enumerate(all_tokens):
+  token_to_index[token] = id
+
+# number of poems
+num_poems = df.shape[0]
+# number of unique tokens
+num_tokens = len(all_tokens)
+
+# initialize the tfidf matrix with zeros
+matrix = np.zeros((num_poems, num_tokens))
+
+# populate the matrix
+# loop over each row in the tfidf_df
+for index, row in tfidf_df.iterrows():
+  # obtain poem id
+  poem_id = row['id']
+  # obtain token
+  token = row['token']
+  # obtain tfidf score for the token
+  tfidf_score = row['tfidf']
+
+  if token in token_to_index:
+    #find index corresponding to token
+    token_index = token_to_index[token]
+
+    # assign tfidf score to the correct location in matrix
+    # x-coord: poem_id
+    # y-coord: token_index
+
+    matrix[poem_id, token_index] = tfidf_score  
+
+# helper function to calculate cosine distance
+def cosine_distances(A,B):
+  # calculated distances between all rows of A and all rows of B
+
+  # normalize
+  A_norm = A / np.linalg.norm(A, axis=1, keepdims=True)
+  B_norm = B / np.linalg.norm(B, axis=1, keepdims=True)
+
+  # compute cosine similarity
+  similarity = np.dot(A_norm, B_norm.T)
+
+  # return cosine distance
+  return 1 - similarity
+
+
+# initialize centroids
+np.random.seed(23)
+# IMPROVEMENT TO MAKE: find k value with elbow method and silhouette score...
+k = 8
+# chooses k random values from the matrix (centroids)
+initial_centroids = matrix[np.random.choice(len(matrix), size=k, replace=False)]
+
+# assign poems to nearest centroid
+# compute Euclidean distance to each centroid
+# reshapes and subtract centroids from each point
+distances = cosine_distances(matrix, initial_centroids)
+# finds index of minimum value in each row- closest centroid
+labels = np.argmin(distances, axis=1)
+
+
+
+def run_kmeans(matrix, k=8, seed=23):
+    np.random.seed(seed)
+    initial_centroids = matrix[np.random.choice(len(matrix), size=k, replace=False)]
+
+    max_iters = 100
+    threshold = 1e-4
+
+    centroids = initial_centroids
+    for iter in range(max_iters):
+        distances = cosine_distances(matrix, centroids)
+        labels = np.argmin(distances, axis=1)
+
+        new_centroids = []
+        for i in range(k):
+            points = matrix[labels == i]
+            if len(points) == 0:
+                new_centroids.append(matrix[np.random.choice(len(matrix))])
+            else:
+                new_centroids.append(points.mean(axis=0))
+        new_centroids = np.array(new_centroids)
+
+        shift = np.linalg.norm(new_centroids - centroids)
+        if shift < threshold:
+            break
+        centroids = new_centroids
+
+    return labels
+
+# Run clustering once on startup
+labels = run_kmeans(matrix)
+df["cluster"] = labels
+
+cluster_to_themes = {
+    0: "Childhood and Innocence",
+    1: "Nature and New Beginnings",
+    2: "Justice, Honor, and Humanity",
+    3: "Rural life and Nature",
+    4: "Patriotism and Youth",
+    5: "Classical/Old Language",
+    6: "Music and Romance",
+    7: "Conflict and Labor"
+}
+themes_to_cluster = {v: k for k, v in cluster_to_themes.items()}
+
+@app.get("/theme/{theme_name}")
+def get_themes(theme_name: str):
+    # Lookup the corresponding cluster number
+    cluster_num = themes_to_cluster.get(theme_name)
+    if cluster_num is None:
+        return JSONResponse(content={"error": "Theme not found."}, status_code=404)
+
+    # Get all poems in that cluster
+    cluster_poems = df[df["cluster"] == cluster_num]
+
+    # Build response
+    response = []
+    for _, row in cluster_poems.iterrows():
+        response.append({
+            "title": row["Title"],
+            "author": row["Author"],
+            "poem": row["Original_Poem"]
+        })
+
+    return JSONResponse(content=response)
