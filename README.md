@@ -86,8 +86,8 @@ Search engines utilizing TF-IDF are helpful for keywords but falls short when de
 * Clustering with TF-IDF scores does not result in clear and optimal k clusters.
 
 ## Resources (in APA)
-Poems Teachers Ask For by Various. (2006, July 26). _Project Gutenberg_ https://www.gutenberg.org/ebooks/18909
+_Cosine similarity – text similarity metric_ Study Machine Learning. https://studymachinelearning.com/cosine-similarity-text-similarity-metric/
 
 Kavlakoglu, E., \& Winland, V. (2025, June 18). _What is K-means clustering?_ IBM. https://www.ibm.com/think/topics/k-means-clustering
 
-_Cosine similarity – text similarity metric_ Study Machine Learning. https://studymachinelearning.com/cosine-similarity-text-similarity-metric/
+Poems Teachers Ask For by Various. (2006, July 26). _Project Gutenberg_ https://www.gutenberg.org/ebooks/18909
