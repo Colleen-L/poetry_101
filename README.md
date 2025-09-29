@@ -1,6 +1,6 @@
 # Poetry_101
 ## Description
-The following is a search engine utilizing TF-IDF for searching poems in a poetry collection, _Poems Teachers Ask For_ produced by Charles Aldarondo and the Online Distributed Proofreading Team, that was found on Project Gutenberg. The search engine utilizes TF-IDF on the processed tokens, cosine similarity, and k-means clustering.
+The following is a search engine utilizing TF-IDF for searching poems in a poetry collection, _Poems Teachers Ask For_ produced by Charles Aldarondo and the Online Distributed Proofreading Team, that was found on Project Gutenberg. The search engine utilizes TF-IDF, cosine similarity, and k-means clustering on the processed tokens.
 
 _Note_: Stemmed tokens are used for the cosine similarity search engine; lemmatized tokens are used for k-means clustering
 
@@ -19,10 +19,10 @@ The following steps are conducted:
 
 3. Search Functionality
    - Implement cosine similarity between the TF-IDF of the query and the dataframe
-   - Stores results as a list to sort and return closes matches
+   - Stores results as a list to sort and return closest matches
 
 4. K-Means Clustering
-   - Utilized the lemmatized tokens
+   - Utilize the lemmatized tokens
    - A random seed is chosen, centroids are intialized, centroids are updated (using cosine distances and calculating the mean vector of all poems in a cluster)
    - Process is repeated until convergence
 
